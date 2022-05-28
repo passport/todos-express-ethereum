@@ -1,5 +1,7 @@
-window.onload = function() {
+window.addEventListener('load', function() {
   console.log('load...');
+  
+  // https://docs.metamask.io/guide/signing-data.html
   
   var currentAccount = null
   
@@ -26,62 +28,47 @@ window.onload = function() {
     
   }
   
-  
-  
-  document.querySelector('form').addEventListener('submit', function(e) {
-    //return
+  document.getElementById('ethereum').addEventListener('click', function(event) {
+    event.preventDefault();
     
-    e.preventDefault();
-    
-    console.log('form submit');
-    
-    
-    
+    console.log('ETHEREUM: eth_requestAccounts');
     ethereum.request({ method: 'eth_requestAccounts' })
       .then(function(accounts) {
+        console.log('got accounts')
         console.log(accounts);
-        
+      
         var from = accounts[0];
         //var msg = `0x${Buffer.from(exampleMessage, 'utf8').toString('hex')}`;
         var msg = 'Hello!';
-        
-        /*
-        var sign = await ethereum.request({
-          method: 'personal_sign',
-          params: [msg, from, 'Example password'],
-        });
-        */
-        
-        // Works
-        
+      
+      
+        console.log('ETHEREUM: personal_sign');
         ethereum.request({
-          method: 'personal_sign',
-          params: [msg, from]
-        })
-        .then(function(sign) {
-          console.log(sign);
+            method: 'personal_sign',
+            params: [msg, from]
+          })
+          .then(function(sign) {
+            console.log(sign);
+        
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/login/ethereum', true);
+            xhr.onreadystatechange = function() {
+              console.log(this.readyState);
+              console.log(this.status);
+              console.log(this.responseText)
           
-          var xhr = new XMLHttpRequest();
-          xhr.open('POST', '/login/ethereum', true);
-          xhr.onreadystatechange = function() {
-            console.log(this.readyState);
-            console.log(this.status);
-            console.log(this.responseText)
-            
-            //if (this.readyState === XMLHttpRequest.DONE) {
-            //  window.location = '/';
-            //}
-          };
-          
-          xhr.setRequestHeader('Content-Type', 'application/json');
-          xhr.send(JSON.stringify({ account: accounts[0], signature: sign }));
-          
-          
-        })
-        .catch(function(error) {
-          console.log('ERROR');
-          console.log(error);
-        })
+              //if (this.readyState === XMLHttpRequest.DONE) {
+              //  window.location = '/';
+              //}
+            };
+        
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.send(JSON.stringify({ account: accounts[0], signature: sign }));
+          })
+          .catch(function(error) {
+            console.log('ERROR');
+            console.log(error);
+          })
         
         
         /*
@@ -146,4 +133,4 @@ window.onload = function() {
     
   });
   
-};
+});

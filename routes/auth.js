@@ -22,6 +22,12 @@ router.post('/login/ethereum', passport.authenticate('web3'), function(req, res,
   console.log('AUTHD!');
 });
 
+// personal_sign
+// https://github.com/ethereum/go-ethereum/pull/2940
+//
+// https://github.com/coopermaruyama/passport-web3
+// https://github.com/psychobunny/passport-dapp-web3
+// https://www.npmjs.com/package/web3-eth-accounts
 router.post('/api/ethereum/personal_sign',
   function(req, res, next) {
     console.log('# ethereum/personal_sign');

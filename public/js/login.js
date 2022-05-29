@@ -51,7 +51,8 @@ window.addEventListener('load', function() {
             console.log(sign);
         
             var xhr = new XMLHttpRequest();
-            xhr.open('POST', '/api/ethereum/personal_sign', true);
+            //xhr.open('POST', '/api/ethereum/personal_sign', true);
+            xhr.open('POST', '/login/ethereum', true);
             xhr.onreadystatechange = function() {
               console.log(this.readyState);
               console.log(this.status);
@@ -63,7 +64,8 @@ window.addEventListener('load', function() {
             };
         
             xhr.setRequestHeader('Content-Type', 'application/json');
-            xhr.send(JSON.stringify({ account: accounts[0], signature: sign }));
+            //xhr.send(JSON.stringify({ account: accounts[0], signature: sign }));
+            xhr.send(JSON.stringify({ address: accounts[0], msg: msg, signed: sign }));
           })
           .catch(function(error) {
             console.log('ERROR');

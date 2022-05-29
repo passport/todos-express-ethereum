@@ -1,13 +1,25 @@
 var express = require('express');
 var passport = require('passport');
+var Web3Strategy = require('passport-web3');
 var ethSigUtil = require('@metamask/eth-sig-util');
 var db = require('../db');
+
+
+passport.use(new Web3Strategy(function verify(address, cb) {
+  console.log('Web3Srategy verify');
+  console.log(address);
+}));
+
 
 var router = express.Router();
 
 /* GET users listing. */
 router.get('/login', function(req, res, next) {
   res.render('login');
+});
+
+router.post('/login/ethereum', passport.authenticate('web3'), function(req, res, next) {
+  console.log('AUTHD!');
 });
 
 router.post('/api/ethereum/personal_sign',

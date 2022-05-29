@@ -51,7 +51,7 @@ window.addEventListener('load', function() {
             console.log(sign);
         
             var xhr = new XMLHttpRequest();
-            xhr.open('POST', '/login/ethereum', true);
+            xhr.open('POST', '/api/ethereum/personal_sign', true);
             xhr.onreadystatechange = function() {
               console.log(this.readyState);
               console.log(this.status);

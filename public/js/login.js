@@ -28,6 +28,43 @@ window.addEventListener('load', function() {
     
   }
   
+  
+  function personalSign(from) {
+    //var msg = `0x${Buffer.from(exampleMessage, 'utf8').toString('hex')}`;
+    var msg = 'Hello!';
+    
+    console.log('ETHEREUM: personal_sign');
+    ethereum.request({
+        method: 'personal_sign',
+        params: [msg, from]
+      })
+      .then(function(sign) {
+        console.log(sign);
+    
+        var xhr = new XMLHttpRequest();
+        //xhr.open('POST', '/api/ethereum/personal_sign', true);
+        xhr.open('POST', '/login/ethereum', true);
+        xhr.onreadystatechange = function() {
+          console.log(this.readyState);
+          console.log(this.status);
+          console.log(this.responseText)
+      
+          //if (this.readyState === XMLHttpRequest.DONE) {
+          //  window.location = '/';
+          //}
+        };
+    
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        //xhr.send(JSON.stringify({ account: from, signature: sign }));
+        xhr.send(JSON.stringify({ address: from, msg: msg, signed: sign }));
+      })
+      .catch(function(error) {
+        console.log('ERROR');
+        console.log(error);
+      })
+  }
+  
+  
   document.getElementById('ethereum').addEventListener('click', function(event) {
     event.preventDefault();
     
@@ -38,39 +75,9 @@ window.addEventListener('load', function() {
         console.log(accounts);
       
         var from = accounts[0];
-        //var msg = `0x${Buffer.from(exampleMessage, 'utf8').toString('hex')}`;
-        var msg = 'Hello!';
+        personalSign(from);
       
-      
-        console.log('ETHEREUM: personal_sign');
-        ethereum.request({
-            method: 'personal_sign',
-            params: [msg, from]
-          })
-          .then(function(sign) {
-            console.log(sign);
         
-            var xhr = new XMLHttpRequest();
-            //xhr.open('POST', '/api/ethereum/personal_sign', true);
-            xhr.open('POST', '/login/ethereum', true);
-            xhr.onreadystatechange = function() {
-              console.log(this.readyState);
-              console.log(this.status);
-              console.log(this.responseText)
-          
-              //if (this.readyState === XMLHttpRequest.DONE) {
-              //  window.location = '/';
-              //}
-            };
-        
-            xhr.setRequestHeader('Content-Type', 'application/json');
-            //xhr.send(JSON.stringify({ account: accounts[0], signature: sign }));
-            xhr.send(JSON.stringify({ address: accounts[0], msg: msg, signed: sign }));
-          })
-          .catch(function(error) {
-            console.log('ERROR');
-            console.log(error);
-          })
         
         
         /*

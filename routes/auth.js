@@ -49,6 +49,7 @@ router.post('/api/ethereum/personal_sign',
 // https://eips.ethereum.org/EIPS/eip-712
 // https://medium.com/metamask/scaling-web3-with-signtypeddata-91d6efc8b290
 // https://danfinlay.github.io/js-eth-personal-sign-examples/
+// https://stackoverflow.com/questions/71043829/recovertypedsignature-function-on-metamask-eth-sig-util-is-not-working
 router.post('/api/ethereum/eth_signedTypedData_v1',
   function(req, res, next) {
     console.log('# ethereum/eth_signedTypedData_v1');
@@ -60,6 +61,22 @@ router.post('/api/ethereum/eth_signedTypedData_v1',
     const recovered = ethSigUtil.recoverTypedSignature({ version: 'V1', data: msgParams, signature: signed })
     console.log(recovered);
   });
+  
+  
+// https://medium.com/metamask/eip712-is-coming-what-to-expect-and-how-to-use-it-bb92fd1a7a26
+router.post('/api/ethereum/eth_signedTypedData_v3',
+  function(req, res, next) {
+    console.log('# ethereum/eth_signedTypedData_v3');
+    console.log(req.body);
+    
+    var msgParams = req.body.msg;
+    var signed = req.body.signed;
+    
+    const recovered = ethSigUtil.recoverTypedSignature({ version: 'V1', data: msgParams, signature: signed })
+    console.log(recovered);
+  });
+  
+
   
 /*
 router.post('/login/ethereum/x2',

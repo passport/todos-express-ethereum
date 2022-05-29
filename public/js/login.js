@@ -111,6 +111,52 @@ window.addEventListener('load', function() {
     });
   }
   
+  function signTypedData_v3(from) {
+    const msgParams = [
+      {
+        type: 'string',
+        name: 'Message',
+        value: 'Hi, Alice!',
+      },
+      {
+        type: 'uint32',
+        name: 'A number',
+        value: '1337',
+      },
+    ];
+    
+    console.log('ETHEREUM: eth_signTypedData');
+    ethereum.request({
+      method: 'eth_signTypedData_v3',
+      params: [msgParams, from]
+    })
+    .then(function(sign) {
+      console.log(sign);
+      
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', '/api/ethereum/eth_signedTypedData_v3', true);
+      xhr.onreadystatechange = function() {
+        console.log(this.readyState);
+        console.log(this.status);
+        console.log(this.responseText)
+    
+        //if (this.readyState === XMLHttpRequest.DONE) {
+        //  window.location = '/';
+        //}
+      };
+  
+      xhr.setRequestHeader('Content-Type', 'application/json');
+      //xhr.send(JSON.stringify({ account: from, signature: sign }));
+      xhr.send(JSON.stringify({ address: from, msg: msgParams, signed: sign }));
+      
+      
+    })
+    .catch(function(error) {
+      console.log('ERROR');
+      console.log(error);
+    });
+  }
+  
   
   document.getElementById('ethereum').addEventListener('click', function(event) {
     event.preventDefault();
@@ -123,7 +169,8 @@ window.addEventListener('load', function() {
       
         var from = accounts[0];
         //personalSign(from);
-        signTypedData_v1(from);
+        //signTypedData_v1(from);
+        signTypedData_v3(from);
         
         
         

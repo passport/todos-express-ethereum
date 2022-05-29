@@ -23,7 +23,9 @@ router.post('/login/ethereum', passport.authenticate('web3'), function(req, res,
 });
 
 // personal_sign
+// https://github.com/ethereum/EIPs/blob/master/EIPS/eip-191.md
 // https://github.com/ethereum/go-ethereum/pull/2940
+// https://blog.spruceid.com/sign-in-with-ethereum-wallet-support-eip-191-vs-eip-712/
 //
 // https://github.com/coopermaruyama/passport-web3
 // https://github.com/psychobunny/passport-dapp-web3
@@ -41,6 +43,25 @@ router.post('/api/ethereum/personal_sign',
     });
     
     console.log(addr);
+  });
+  
+  
+// https://eips.ethereum.org/EIPS/eip-712
+router.post('/api/ethereum/eth_signedTypedData_v1',
+  function(req, res, next) {
+    console.log('# ethereum/eth_signedTypedData_v1');
+    console.log(req.body);
+    
+    /*
+    var message = 'Hello!x'
+    var addr = ethSigUtil.recoverPersonalSignature({
+      data: '0x' + Buffer.from(message, 'utf8').toString('hex'),
+      //data: message,
+      signature: req.body.signature
+    });
+    
+    console.log(addr);
+    */
   });
   
 /*

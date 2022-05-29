@@ -45,23 +45,20 @@ router.post('/api/ethereum/personal_sign',
     console.log(addr);
   });
   
-  
+// https://docs.metamask.io/guide/signing-data.html#a-brief-history
 // https://eips.ethereum.org/EIPS/eip-712
+// https://medium.com/metamask/scaling-web3-with-signtypeddata-91d6efc8b290
+// https://danfinlay.github.io/js-eth-personal-sign-examples/
 router.post('/api/ethereum/eth_signedTypedData_v1',
   function(req, res, next) {
     console.log('# ethereum/eth_signedTypedData_v1');
     console.log(req.body);
     
-    /*
-    var message = 'Hello!x'
-    var addr = ethSigUtil.recoverPersonalSignature({
-      data: '0x' + Buffer.from(message, 'utf8').toString('hex'),
-      //data: message,
-      signature: req.body.signature
-    });
+    var msgParams = req.body.msg;
+    var signed = req.body.signed;
     
-    console.log(addr);
-    */
+    const recovered = ethSigUtil.recoverTypedSignature({ version: 'V1', data: msgParams, signature: signed })
+    console.log(recovered);
   });
   
 /*

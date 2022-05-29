@@ -101,7 +101,7 @@ window.addEventListener('load', function() {
   
       xhr.setRequestHeader('Content-Type', 'application/json');
       //xhr.send(JSON.stringify({ account: from, signature: sign }));
-      xhr.send(JSON.stringify({ address: from, signed: sign }));
+      xhr.send(JSON.stringify({ address: from, msg: msgParams, signed: sign }));
       
       
     })

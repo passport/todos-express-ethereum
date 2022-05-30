@@ -29,6 +29,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'web/dist'))); // TODO: remove this
 app.use(session({
   secret: 'keyboard cat',
   resave: false, // don't save session if unmodified

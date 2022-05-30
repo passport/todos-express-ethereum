@@ -1,9 +1,14 @@
 var express = require('express');
 var passport = require('passport');
+var EthereumStrategy = require('passport-ethereum-eip4361');
 var Web3Strategy = require('passport-web3');
 var ethSigUtil = require('@metamask/eth-sig-util');
 var db = require('../db');
 
+
+passport.use(new EthereumStrategy(function verify() {
+  console.log('VERIFY SOMETHING!!!');
+}));
 
 passport.use(new Web3Strategy(function verify(address, cb) {
   console.log('Web3Srategy verify');
@@ -18,9 +23,15 @@ router.get('/login', function(req, res, next) {
   res.render('login');
 });
 
+router.post('/login/ethereum', passport.authenticate('ethereum'), function(req, res, next) {
+  console.log('AUTHD!');
+});
+
+/*
 router.post('/login/ethereum', passport.authenticate('web3'), function(req, res, next) {
   console.log('AUTHD!');
 });
+*/
 
 // personal_sign
 // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-191.md

@@ -168,9 +168,9 @@ window.addEventListener('load', function() {
         console.log(accounts);
       
         var from = accounts[0];
-        //personalSign(from);
+        personalSign(from);
         //signTypedData_v1(from);
-        signTypedData_v3(from);
+        //signTypedData_v3(from);
         
         
         

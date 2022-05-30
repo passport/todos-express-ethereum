@@ -49,5 +49,8 @@
     "pluralize": "^8.0.0",
     "siwe": "^1.1.6",
     "sqlite3": "^5.0.2"
-  }
+  },
+  "workspaces": [
+    "web"
+  ]
 }

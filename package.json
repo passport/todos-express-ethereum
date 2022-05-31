@@ -2,7 +2,7 @@
   "name": "todos-express-ethereum",
   "version": "0.0.0",
   "private": true,
-  "description": "Express 4.x app using Passport for sign in with username and password.",
+  "description": "Todo app using Express and Passport for sign in with Ethereum.",
   "keywords": [
     "example",
     "express",

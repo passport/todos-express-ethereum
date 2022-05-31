@@ -6,14 +6,63 @@ var ethSigUtil = require('@metamask/eth-sig-util');
 var db = require('../db');
 
 
-passport.use(new EthereumStrategy(function verify() {
+passport.use(new EthereumStrategy(function verify(address, cb) {
   console.log('VERIFY SOMETHING!!!');
+  console.log(address);
+  
+  // https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-2.md
+  // https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-3.md
+  
+  db.get('SELECT * FROM blockchain_credentials WHERE chain = ? AND address = ?', [
+    'eip155:1',
+    address
+  ], function(err, row) {
+    if (err) { return cb(err); }
+    if (!row) {
+      db.run('INSERT INTO users (username) VALUES (?)', [
+        address
+      ], function(err) {
+        if (err) { return cb(err); }
+        var id = this.lastID;
+        db.run('INSERT INTO blockchain_credentials (user_id, chain, address) VALUES (?, ?, ?)', [
+          id,
+          'eip155:1',
+          address
+        ], function(err) {
+          if (err) { return cb(err); }
+          var user = {
+            id: id,
+            username: address
+          };
+          return cb(null, user);
+        });
+      });
+    } else {
+      db.get('SELECT rowid AS id, * FROM users WHERE rowid = ?', [ row.user_id ], function(err, row) {
+        if (err) { return cb(err); }
+        if (!row) { return cb(null, false); }
+        return cb(null, row);
+      });
+    }
+  });
 }));
 
 passport.use(new Web3Strategy(function verify(address, cb) {
   console.log('Web3Srategy verify');
   console.log(address);
 }));
+
+passport.serializeUser(function(user, cb) {
+  process.nextTick(function() {
+    cb(null, { id: user.id, username: user.username, name: user.name });
+  });
+});
+
+passport.deserializeUser(function(user, cb) {
+  process.nextTick(function() {
+    return cb(null, user);
+  });
+});
 
 
 var router = express.Router();
@@ -36,6 +85,8 @@ router.post('/login/ethereum', passport.authenticate('ethereum', {
     }
   });
 }, function(err, req, res, next) {
+  console.log(err);
+  
   if (err.status !== 401) { return next(err); }
   res.format({
     'text/html': function() {

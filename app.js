@@ -47,6 +47,7 @@ app.use(function(req, res, next) {
 });
 app.use(function(req, res, next) {
   //res.locals.csrfToken = req.csrfToken();
+  res.locals.csrfToken = 'TODO';
   next();
 });
 

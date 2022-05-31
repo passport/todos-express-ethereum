@@ -14,12 +14,12 @@ db.serialize(function() {
     name TEXT \
   )");
   
-  db.run("CREATE TABLE IF NOT EXISTS federated_credentials ( \
+  db.run("CREATE TABLE IF NOT EXISTS blockchain_credentials ( \
     id INTEGER PRIMARY KEY, \
     user_id INTEGER NOT NULL, \
-    provider TEXT NOT NULL, \
-    subject TEXT NOT NULL, \
-    UNIQUE (provider, subject) \
+    chain TEXT NOT NULL, \
+    address TEXT NOT NULL, \
+    UNIQUE (chain, address) \
   )");
   
   db.run("CREATE TABLE IF NOT EXISTS todos ( \

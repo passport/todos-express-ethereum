@@ -52,15 +52,13 @@ window.addEventListener('load', function() {
           body: JSON.stringify({ message: message, signature: signature }),
         });
       });
-      
     })
-    .then(function(x) {
-      console.log('fetched!!');
-      console.log(x);
-      
+    .then(function(response) {
+      return response.json();
+    })
+    .then(function(json) {
+      window.location.href = json.location;
     });
-    
-  
   });
   
 });

@@ -23,8 +23,28 @@ router.get('/login', function(req, res, next) {
   res.render('login');
 });
 
-router.post('/login/ethereum', passport.authenticate('ethereum'), function(req, res, next) {
-  console.log('AUTHD!');
+router.post('/login/ethereum', passport.authenticate('ethereum', {
+  failureMessage: true,
+  failWithError: true
+}), function(req, res, next) {
+  res.format({
+    'text/html': function() {
+      res.redirect('/');
+    },
+    'application/json': function() {
+      res.json({ ok: true, location: '/' });
+    }
+  });
+}, function(err, req, res, next) {
+  if (err.status !== 401) { return next(err); }
+  res.format({
+    'text/html': function() {
+      res.redirect('/login');
+    },
+    'application/json': function() {
+      res.json({ ok: false, location: '/login' });
+    }
+  });
 });
 
 /*

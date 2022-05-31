@@ -1,3 +1,4 @@
+import { ethers } from 'ethers';
 import { SiweMessage } from 'siwe';
 
 console.log('hello workspace');
@@ -20,27 +21,27 @@ window.addEventListener('load', function() {
     
     ethereum.request({ method: 'eth_requestAccounts' })
     .then(function(accounts) {
-      const account = accounts[0]
+      const account = accounts[0];
+      const address = ethers.utils.getAddress(account);
       
       const m = new SiweMessage({
         domain: window.location.host,
-        address: account,
+        address: address,
         statement: 'Sign in with Ethereum to the app.',
         uri: window.location.origin,
         version: '1',
         chainId: '1'
       });
-      console.log(m);
       
       const message = m.prepareMessage();
       
       return ethereum.request({
         method: 'personal_sign',
-        params: [message, account]
+        params: [message, address]
       })
-      .then(function(signed) {
+      .then(function(signature) {
         console.log('signed!');
-        console.log(signed);
+        console.log(signature);
         
         return fetch('/login/ethereum', {
           method: 'POST',
@@ -48,8 +49,7 @@ window.addEventListener('load', function() {
             'Content-Type': 'application/json',
             'Accept': 'application/json'
           },
-          body: JSON.stringify({ address: account, message: message, sign: signed }),
-        
+          body: JSON.stringify({ message: message, signature: signature }),
         });
       });
       

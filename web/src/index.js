@@ -31,9 +31,9 @@ window.addEventListener('load', function() {
         address: address,
         statement: 'Sign in with Ethereum to the app.',
         uri: window.location.origin,
-        nonce: args[1],
         version: '1',
-        chainId: '1'
+        chainId: '1',
+        nonce: args[1]
       });
       
       const m = message.prepareMessage();

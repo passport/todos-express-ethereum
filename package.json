@@ -30,7 +30,6 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
-    "@metamask/eth-sig-util": "^4.0.0",
     "connect-ensure-login": "^0.1.1",
     "connect-sqlite3": "^0.9.13",
     "cookie-parser": "~1.4.4",
@@ -44,7 +43,7 @@
     "mkdirp": "^1.0.4",
     "morgan": "~1.9.1",
     "passport": "^0.6.0",
-    "passport-web3": "^0.1.7",
+    "passport-ethereum-siwe": "^0.1.0",
     "pluralize": "^8.0.0",
     "sqlite3": "^5.0.2"
   },

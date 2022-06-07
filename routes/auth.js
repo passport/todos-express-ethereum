@@ -1,10 +1,13 @@
 var express = require('express');
 var passport = require('passport');
 var EthereumStrategy = require('passport-ethereum-eip4361');
+var SessionNonceStore = require('passport-ethereum-eip4361').SessionNonceStore;
 var db = require('../db');
 
 
-passport.use(new EthereumStrategy(function verify(address, cb) {
+var store = new SessionNonceStore();
+
+passport.use(new EthereumStrategy({ store: store }, function verify(address, cb) {
   console.log('VERIFY SOMETHING!!!');
   console.log(address);
   
@@ -73,6 +76,14 @@ router.post('/login/ethereum', passport.authenticate('ethereum', {
   var cxx = Math.floor(err.status / 100);
   if (cxx != 4) { return next(err); }
   res.json({ ok: false, location: '/login' });
+});
+
+router.post('/login/ethereum/challenge', function(req, res, next) {
+  store.challenge(req, function(err, nonce) {
+    if (err) { return next(err); }
+    console.log('NONCE: ' + nonce);
+    res.json({ nonce: nonce });
+  });
 });
   
 router.post('/logout', function(req, res, next) {

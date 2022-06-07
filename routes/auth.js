@@ -1,8 +1,6 @@
 var express = require('express');
 var passport = require('passport');
 var EthereumStrategy = require('passport-ethereum-eip4361');
-var Web3Strategy = require('passport-web3');
-var ethSigUtil = require('@metamask/eth-sig-util');
 var db = require('../db');
 
 
@@ -47,11 +45,6 @@ passport.use(new EthereumStrategy(function verify(address, cb) {
   });
 }));
 
-passport.use(new Web3Strategy(function verify(address, cb) {
-  console.log('Web3Srategy verify');
-  console.log(address);
-}));
-
 passport.serializeUser(function(user, cb) {
   process.nextTick(function() {
     cb(null, { id: user.id, username: user.username, name: user.name });
@@ -67,7 +60,6 @@ passport.deserializeUser(function(user, cb) {
 
 var router = express.Router();
 
-/* GET users listing. */
 router.get('/login', function(req, res, next) {
   res.render('login');
 });
@@ -76,33 +68,12 @@ router.post('/login/ethereum', passport.authenticate('ethereum', {
   failureMessage: true,
   failWithError: true
 }), function(req, res, next) {
-  res.format({
-    'text/html': function() {
-      res.redirect('/');
-    },
-    'application/json': function() {
-      res.json({ ok: true, location: '/' });
-    }
-  });
+  res.json({ ok: true, location: '/' });
 }, function(err, req, res, next) {
-  console.log(err);
-  
-  if (err.status !== 401) { return next(err); }
-  res.format({
-    'text/html': function() {
-      res.redirect('/login');
-    },
-    'application/json': function() {
-      res.json({ ok: false, location: '/login' });
-    }
-  });
+  var cxx = Math.floor(err.status / 100);
+  if (cxx != 4) { return next(err); }
+  res.json({ ok: false, location: '/login' });
 });
-
-/*
-router.post('/login/ethereum', passport.authenticate('web3'), function(req, res, next) {
-  console.log('AUTHD!');
-});
-*/
 
 // personal_sign
 // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-191.md

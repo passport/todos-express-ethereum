@@ -1,7 +1,7 @@
 var express = require('express');
 var passport = require('passport');
-var EthereumStrategy = require('passport-ethereum-eip4361');
-var SessionNonceStore = require('passport-ethereum-eip4361').SessionNonceStore;
+var EthereumStrategy = require('passport-ethereum-siwe');
+var SessionNonceStore = require('passport-ethereum-siwe').SessionNonceStore;
 var db = require('../db');
 
 

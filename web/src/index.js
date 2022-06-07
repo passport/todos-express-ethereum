@@ -1,48 +1,46 @@
 import { ethers } from 'ethers';
 import { SiweMessage } from 'siwe';
 
-console.log('hello workspace');
-
-
-
 window.addEventListener('load', function() {
-  console.log('load');
   
-  if (typeof window.ethereum == 'undefined') {
-    console.log('Ethereum-compatible browser not detected. Please install MetaMask.');
-    return;
-  }
-  
-
   document.getElementById('siw-ethereum').addEventListener('click', function(event) {
-    event.preventDefault();
-  
-    console.log('sign in...');
+    if (typeof window.ethereum == 'undefined') { return; }
     
-    ethereum.request({ method: 'eth_requestAccounts' })
-    .then(function(accounts) {
-      const account = accounts[0];
+    event.preventDefault();
+    
+    return fetch('/login/ethereum/challenge', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json'
+      }
+    })
+    .then(function(response) {
+      return response.json();
+    })
+    .then(function(json) {
+      return ethereum.request({ method: 'eth_requestAccounts' })
+      .then(function(accounts) {
+        return [ accounts[0], json.nonce ]
+      });
+    })
+    .then(function(args) {
+      const account = args[0];
       const address = ethers.utils.getAddress(account);
-      
-      const m = new SiweMessage({
+      const message = new SiweMessage({
         domain: window.location.host,
         address: address,
         statement: 'Sign in with Ethereum to the app.',
         uri: window.location.origin,
+        nonce: args[1],
         version: '1',
         chainId: '1'
       });
       
-      const message = m.prepareMessage();
-      
       return ethereum.request({
         method: 'personal_sign',
-        params: [message, address]
+        params: [ message.prepareMessage(), address ]
       })
       .then(function(signature) {
-        console.log('signed!');
-        console.log(signature);
-        
         return fetch('/login/ethereum', {
           method: 'POST',
           headers: {

@@ -36,19 +36,23 @@ window.addEventListener('load', function() {
         chainId: '1'
       });
       
+      const m = message.prepareMessage();
       return ethereum.request({
         method: 'personal_sign',
-        params: [ message.prepareMessage(), address ]
+        params: [ m, address ]
       })
       .then(function(signature) {
-        return fetch('/login/ethereum', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-          },
-          body: JSON.stringify({ message: message, signature: signature }),
-        });
+        return [ m, signature ]
+      });
+    })
+    .then(function(args) {
+      return fetch('/login/ethereum', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({ message: args[0], signature: args[1] }),
       });
     })
     .then(function(response) {

@@ -8,9 +8,6 @@ var db = require('../db');
 var store = new SessionNonceStore();
 
 passport.use(new EthereumStrategy({ store: store }, function verify(address, cb) {
-  console.log('VERIFY SOMETHING!!!');
-  console.log(address);
-  
   // https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-2.md
   // https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-3.md
   
@@ -81,7 +78,6 @@ router.post('/login/ethereum', passport.authenticate('ethereum', {
 router.post('/login/ethereum/challenge', function(req, res, next) {
   store.challenge(req, function(err, nonce) {
     if (err) { return next(err); }
-    console.log('NONCE: ' + nonce);
     res.json({ nonce: nonce });
   });
 });

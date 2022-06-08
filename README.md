@@ -25,7 +25,7 @@ Navigate to [`http://localhost:3000`](http://localhost:3000).
 ## Overview
 
 This app illustrates how to build a todo app with sign in functionality using
-Express, Passport, and the [`passport-ethereum-siwe`](https://github.com/jaredhanson/passport-ethereum)
+Express, Passport, and the [`passport-ethereum-siwe`](https://www.passportjs.org/packages/passport-ethereum-siwe/)
 strategy.
 
 This app is a traditional web application, in which application logic and data
